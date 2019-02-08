@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">DailyNews</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="desc">your desc goes here</string>
+
+    <string name="TopHeadLines">Top HeadLines </string>
+    <string name="Business">Business</string>
+    <string name="Entertainment">Entertainment</string>
+    <string name="Health">Health</string>
+    <string name="Science">Science</string>
+    <string name="Sport">Sport</string>
+    <string name="Technology">Technology</string>
+    <string name="favoriteNews">Favorite News</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Enter Your Password </string>
+    <string name="action_sign_in">SignIn</string>
+    <string name="action_sign_up">SignUp</string>
+    <string name="action_sign_out">SignOut</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="Authentication_failed">Authentication failed </string>
+    <string name="Authentication_success">Authentication success </string>
+    <string name="not_member">Not a member?  create new account </string>
+    <string name="ref_key">USER_ID_KEY </string>
+    <string name="id">ID_KEY </string>
+    <string name="email">EMAIL_KEY </string>
+    <string name="add_comment">add your comment </string>
+
+    <string name="widget_key">MyPrefs </string>
+    <string name="title">title </string>
+    <string name="time">time </string>
+
+
+
+
+    <string name="appwidget_text">News </string>
+
+
+</resources>
