@@ -4,9 +4,11 @@ package com.example.yara.dailynews.UI;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -39,6 +41,8 @@ public class DetailsFragment extends Fragment {
     private ImageView iv_addcomment;
     private ImageView iv_addToWidget;
     private CheckBox ch_favorite;
+    private FloatingActionButton fab;
+
 
     private String title ;
     private String description  ;
@@ -69,6 +73,8 @@ public class DetailsFragment extends Fragment {
         ch_favorite=view.findViewById(R.id.ch_favorite);
         iv_addcomment=view.findViewById(R.id.iv_add_Comment);
         iv_addToWidget=view.findViewById(R.id.iv_add_to_widget);
+        fab = view.findViewById(R.id.fab);
+
 
         //save to widget
         prefs =getActivity().getSharedPreferences("myPref", Context.MODE_PRIVATE);
@@ -121,10 +127,24 @@ public class DetailsFragment extends Fragment {
                 editor.commit();
             }
         });
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareLink();
+            }
+        });
 
         return view;
     }
+    private void shareLink() {
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        share.putExtra(Intent.EXTRA_SUBJECT, "Title Of The Post");
+        share.putExtra(Intent.EXTRA_TEXT, url);
 
+        startActivity(Intent.createChooser(share, "Share link!"));
+    }
     private void goTOAddComment() {
         Bundle bundle=new Bundle();
         bundle.putString("title",title);

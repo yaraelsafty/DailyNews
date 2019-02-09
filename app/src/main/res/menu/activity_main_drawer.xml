@@ -33,7 +33,7 @@
             android:title="@string/Technology" />
 
     </group>
-    <item android:title="Global News">
+    <item android:title="@string/group_title">
 
         <group android:checkableBehavior="single">
             <menu>

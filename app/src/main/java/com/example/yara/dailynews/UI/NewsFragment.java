@@ -82,21 +82,24 @@ public class NewsFragment extends Fragment {
         progressBar=view.findViewById(R.id.progressBar);
         recyclerView=view.findViewById(R.id.rv_news);
         mlayoutManager=new LinearLayoutManager(this.getActivity());
-        recyclerView.setLayoutManager(mlayoutManager);
 
         if (savedRecyclerViewState != null) {
             recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerViewState);
+            Log.d(TAG,""+savedRecyclerViewState);
+
         }
         else {
-
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 recyclerView.setLayoutManager(mlayoutManager);
                 recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerViewState);
             }       else {
                 recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, LinearLayoutManager.VERTICAL));
                 recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerViewState);
+
             }
         }
+        recyclerView.setLayoutManager(mlayoutManager);
+
         getData();
         return view;
     }
@@ -112,6 +115,7 @@ public class NewsFragment extends Fragment {
                 recyclerView.setAdapter(new newsAdapter(getActivity(),news));
                 if (savedRecyclerViewState != null)
                     recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerViewState);
+                Log.d(TAG,""+savedRecyclerViewState);
             }
 
             @Override
