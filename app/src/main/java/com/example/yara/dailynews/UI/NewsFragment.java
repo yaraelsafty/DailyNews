@@ -71,6 +71,9 @@ public class NewsFragment extends Fragment {
             country = getArguments().getString(ARG_COUNTRY);
             category = getArguments().getString(ARG_CATEGORY);
         }
+        if (savedInstanceState != null) {
+            savedRecyclerViewState = savedInstanceState.getParcelable(LIST_STATE);
+        }
     }
 
     @Override
@@ -91,11 +94,11 @@ public class NewsFragment extends Fragment {
         mlayoutManager=new LinearLayoutManager(this.getActivity());
 
 
-//        if (savedInstanceState != null) {
-//            savedRecyclerViewState = savedInstanceState.getParcelable(LIST_STATE);
-//            Log.d(TAG,"***get state"+savedRecyclerViewState);
-//
-//        }
+        if (savedInstanceState != null) {
+            savedRecyclerViewState = savedInstanceState.getParcelable(LIST_STATE);
+            Log.d(TAG,"***get state"+savedRecyclerViewState);
+
+        }
 
 
         getData();
