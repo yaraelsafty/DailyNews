@@ -75,7 +75,21 @@ public class NewsFragment extends Fragment {
         progressBar=view.findViewById(R.id.progressBar);
         recyclerView=view.findViewById(R.id.rv_news);
         mlayoutManager=new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL);
-     //   recyclerView.setLayoutManager(mlayoutManager);
+        recyclerView.setLayoutManager(mlayoutManager);
+        if (mListState != null) {
+            recyclerView.getLayoutManager().onRestoreInstanceState(mListState);
+        } else {
+
+            if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                recyclerView.setLayoutManager(mlayoutManager);
+                recyclerView.getLayoutManager().onRestoreInstanceState(mListState);
+
+            } else {
+                recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
+                recyclerView.getLayoutManager().onRestoreInstanceState(mListState);
+
+            }
+        }
 
 
         getData();
@@ -99,17 +113,11 @@ public class NewsFragment extends Fragment {
             public void onResponse(Call<News> call, Response<News> response) {
                 progressBar.setVisibility(View.GONE);
                 List<Article> news=response.body().getArticles();
-                recyclerView.setLayoutManager(mlayoutManager);
                 recyclerView.setAdapter(new newsAdapter(getActivity(),news));
                 if (mListState != null) {
+                    Log.d(TAG,""+mListState);
                     recyclerView.getLayoutManager().onRestoreInstanceState(mListState);
-                } else {
-
-                        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL));
-                        recyclerView.getLayoutManager().onRestoreInstanceState(mListState);
-
                 }
-             //  recyclerView.setLayoutManager(mlayoutManager);
             }
 
             @Override
