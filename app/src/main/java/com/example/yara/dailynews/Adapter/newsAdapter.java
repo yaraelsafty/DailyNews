@@ -33,7 +33,9 @@ public class newsAdapter extends RecyclerView.Adapter<newsVH> {
         this.context = context;
         this.list = list;
     }
-
+    public void setData(List<Article> list) {
+        this.list = list;
+    }
     @Override
     public newsVH onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();

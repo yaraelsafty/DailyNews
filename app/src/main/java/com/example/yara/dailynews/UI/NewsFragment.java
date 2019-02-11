@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -37,9 +38,10 @@ public class NewsFragment extends Fragment {
     private String TAG=NewsFragment.class.getSimpleName();
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private Parcelable savedRecyclerViewState;
-    private RecyclerView.LayoutManager mlayoutManager;
-    private final String LIST_STATE = "recycler_state";
+    private StaggeredGridLayoutManager mlayoutManager;
+
+    public static final String RVSTATE = "rvstate";
+    private Parcelable mListState;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_COUNTRY = "country";
@@ -64,25 +66,6 @@ public class NewsFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            country = getArguments().getString(ARG_COUNTRY);
-            category = getArguments().getString(ARG_CATEGORY);
-        }
-        if (savedInstanceState != null) {
-            savedRecyclerViewState = savedInstanceState.getParcelable(LIST_STATE);
-        }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            savedRecyclerViewState = savedInstanceState.getParcelable(LIST_STATE);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,18 +74,21 @@ public class NewsFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_news, container, false);
         progressBar=view.findViewById(R.id.progressBar);
         recyclerView=view.findViewById(R.id.rv_news);
-        mlayoutManager=new LinearLayoutManager(this.getActivity());
-
-
-        if (savedInstanceState != null) {
-            savedRecyclerViewState = savedInstanceState.getParcelable(LIST_STATE);
-            Log.d(TAG,"***get state"+savedRecyclerViewState);
-
-        }
+        mlayoutManager=new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL);
+     //   recyclerView.setLayoutManager(mlayoutManager);
 
 
         getData();
         return view;
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            country = getArguments().getString(ARG_COUNTRY);
+            category = getArguments().getString(ARG_CATEGORY);
+        }
     }
 
     private void getData() {
@@ -113,25 +99,17 @@ public class NewsFragment extends Fragment {
             public void onResponse(Call<News> call, Response<News> response) {
                 progressBar.setVisibility(View.GONE);
                 List<Article> news=response.body().getArticles();
-                recyclerView.setAdapter(new newsAdapter(getActivity(),news));
-
-                if (savedRecyclerViewState != null) {
-                    Log.d(TAG,"***"+savedRecyclerViewState);
-                    recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerViewState);
-                }
-                else {
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        recyclerView.setLayoutManager(mlayoutManager);
-                        recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerViewState);
-                   }
-                   else {
-                        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, LinearLayoutManager.VERTICAL));
-                        recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerViewState);
-
-                    }
-                }
                 recyclerView.setLayoutManager(mlayoutManager);
-                Log.d(TAG,""+savedRecyclerViewState);
+                recyclerView.setAdapter(new newsAdapter(getActivity(),news));
+                if (mListState != null) {
+                    recyclerView.getLayoutManager().onRestoreInstanceState(mListState);
+                } else {
+
+                        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL));
+                        recyclerView.getLayoutManager().onRestoreInstanceState(mListState);
+
+                }
+             //  recyclerView.setLayoutManager(mlayoutManager);
             }
 
             @Override
@@ -140,30 +118,45 @@ public class NewsFragment extends Fragment {
 
             }
         });
-}
+    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        savedRecyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
-        outState.putParcelable(LIST_STATE, savedRecyclerViewState);
+        outState.putParcelable(RVSTATE, mListState);
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mlayoutManager=new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL);
+
+        if (getArguments() != null) {
+            country = getArguments().getString(ARG_COUNTRY);
+            category = getArguments().getString(ARG_CATEGORY);
+        }
+        setRetainInstance(true);
+        if (savedInstanceState != null) {
+            mListState = savedInstanceState.getParcelable(RVSTATE);
+
+        } else {
+
+        }
+    }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mListState = savedInstanceState.getParcelable(RVSTATE);
+
+        } else {
+
+        }
+    }
 
     @Override
     public void onPause() {
         super.onPause();
-        savedRecyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
-
+        mListState = recyclerView.getLayoutManager().onSaveInstanceState();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (savedRecyclerViewState !=null) {
-            recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerViewState);
-        }
-    }
-
 }
